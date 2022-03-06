@@ -553,13 +553,13 @@ bigint bigint_create(char *number, size_t length)
 bigint bigint_create2(char *number)
 {
 	// Get size of number
-	char* number2=number;
 	size_t length = 0;
-	while (*number2)
+	while (*number)
 	{
         	length += 1;
-        	number2 +=1;
+        	number +=1;
 	}
+	number -= length;
 	
 	// Wrong arguments passed to function
 	if (number == NULL || length == 0)
