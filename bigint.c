@@ -550,6 +550,78 @@ bigint bigint_create(char *number, size_t length)
 	return return_number;
 }
 
+bigint bigint_create2(char *number)
+{
+	char* number2=number;
+	//printf("\n to -> %s\n", number);
+	size_t length = 0;
+	while (*number2) {
+        length += 1;
+        number2 +=1;
+    }
+	//printf("\n to -> %zu\n", length);
+	//printf("\n to -> %s\n", number);
+	
+	// Wrong arguments passed to function
+	if (number == NULL || length == 0)
+	{
+		bigint_errno = BIGINT_INCORRECT_STRING;
+		return NULL;
+	}
+
+	// Check all the parameters
+	uint8_t sign = check_sign(&number, &length);
+	bigint_base base = check_base(&number, &length);
+	int correct = check_syntax(&number, length, base);
+
+	// Tests' failure
+	if (correct == FAILURE)
+	{
+		bigint_errno = BIGINT_INCORRECT_STRING;
+		return NULL;
+	}
+
+	// Allocate memory for bigint
+	bigint return_number = (bigint)malloc(sizeof(struct bigint_data_structure));
+	check_memory_ptr(return_number);
+	initialise_bigint(return_number);
+
+	return_number->sign = sign;
+	return_number->first = (bigint_node *)malloc(sizeof(bigint_node));
+	check_memory_ptr(return_number->first);
+	initialise_node(return_number->first);
+
+	// Create bigint
+	if (base == BIN)
+	{
+		correct = save_binary(return_number, number, length);
+	}
+	else if (base == HEX)
+	{
+		char *binary_number = convert_to_binary(number, length);
+		correct = save_binary(return_number, binary_number, length * 4);
+		free(binary_number);
+	}
+	else
+	{
+		correct = save_decimal(return_number, number, length);
+	}
+
+	// Check save functions performance
+	if (correct == FAILURE)
+	{
+		return NULL;
+	}
+
+	// Zero cannot be negative
+	if (return_number->length == 1 && return_number->first->value == 0)
+	{
+		return_number->sign = 0;
+	}
+
+	return return_number;
+}
+
 bigint bigint_convert_to_bigint(void *integer, size_t length)
 {
 	// Wrong arguments

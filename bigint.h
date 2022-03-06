@@ -63,6 +63,8 @@ extern char *error_messages[ERROR_MESSAGES_SIZE];
 
 int bigint_info();
 bigint bigint_create(char *number, size_t length);
+bigint bigint_create2(char *number);
+
 int bigint_release(int count, ...);
 size_t bigint_size(bigint number);
 int bigint_print(FILE *stream, bigint_base base, bigint number);
