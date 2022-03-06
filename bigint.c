@@ -552,15 +552,14 @@ bigint bigint_create(char *number, size_t length)
 
 bigint bigint_create2(char *number)
 {
+	// Get size of number
 	char* number2=number;
-	//printf("\n to -> %s\n", number);
 	size_t length = 0;
-	while (*number2) {
-        length += 1;
-        number2 +=1;
-    }
-	//printf("\n to -> %zu\n", length);
-	//printf("\n to -> %s\n", number);
+	while (*number2)
+	{
+        	length += 1;
+        	number2 +=1;
+	}
 	
 	// Wrong arguments passed to function
 	if (number == NULL || length == 0)
